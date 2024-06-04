@@ -1,0 +1,28 @@
+class Solution{
+    
+   
+    // Function for finding maximum and value pair
+    public static int lenOfLongSubarr (int A[], int N, int K) {
+        HashMap<Long,Integer>hash=new HashMap<>();
+     int maxlen=0;
+     long sum=0;
+     for(int i=0;i<N;i++){
+         sum=sum+A[i];
+         if(sum==K){
+             maxlen=Math.max(maxlen,i+1);
+             
+         }
+         long rem=sum-K;
+          if(hash.containsKey(rem)){
+              int len=i-hash.get(rem);
+              maxlen=Math.max(maxlen,len);
+          }
+          if(!hash.containsKey(sum)){
+              hash.put(sum,i);
+          }
+     }
+     return maxlen;
+    }
+    
+    
+}
