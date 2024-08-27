@@ -1,0 +1,109 @@
+ #include <iostream>
+    #include <stack>
+    using namespace std;
+
+    int EvaluateExpression(char* expr) {
+    if (expr == nullptr) {
+        return 0;
+      }
+
+    stack<int> numbers;
+    stack<char> operators;
+
+    int i = 0;
+    while (expr[i] != '\0') {
+        if (expr[i] == ' ') {
+            // Skip spaces
+            i++;
+            continue;
+        }
+
+        if (isdigit(expr[i])) {
+            // If current character is a digit, parse the number
+            int num = 0;
+            while (isdigit(expr[i])) {
+                num = num * 10 + (expr[i] - '0');
+                i++;
+            }
+            numbers.push(num);
+        } else {
+            // If current character is an operator, handle precedence
+            while (!operators.empty() && ((operators.top() == '*' || operators.top() == '/') ||
+                   (operators.top() == '+' || operators.top() == '-') && (expr[i] == '+' || expr[i] == '-'))) {
+                int num2 = numbers.top();
+                numbers.pop();
+                int num1 = numbers.top();
+                numbers.pop();
+                char op = operators.top();
+                operators.pop();
+
+                // Perform the operation based on the operator
+                int result;
+                switch (op) {
+                    case '+':
+                        result = num1 + num2;
+                        break;
+                    case '-':
+                        result = num1 - num2;
+                        break;
+                    case '*':
+                        result = num1 * num2;
+                        break;
+                    case '/':
+                        result = num1 / num2;
+                        break;
+                }
+
+                // Push the result back to the numbers stack
+                numbers.push(result);
+            }
+
+            // Push the current operator to the operators stack
+            operators.push(expr[i]);
+            i++;
+        }
+    }
+
+    // Evaluate remaining operators and numbers
+    while (!operators.empty()) {
+        int num2 = numbers.top();
+        numbers.pop();
+        int num1 = numbers.top();
+        numbers.pop();
+        char op = operators.top();
+        operators.pop();
+
+        int result;
+        switch (op) {
+            case '+':
+                result = num1 + num2;
+                break;
+            case '-':
+                result = num1 - num2;
+                break;
+            case '*':
+                result = num1 * num2;
+                break;
+            case '/':
+                result = num1 / num2;
+                break;
+        }
+
+        numbers.push(result);
+    }
+
+    // Return the final result
+    return numbers.top();
+      }
+
+    int main() {
+     int length;
+    cin >> length;
+
+    char expr[length];
+    cin.ignore();
+    cin.getline(expr, length + 1);
+    int result = EvaluateExpression(expr);
+    cout << result << endl;
+    return 0;
+}
