@@ -1,0 +1,25 @@
+class Solution {
+    public List<List<Integer>> permute(int[] nums) {
+       List<List<Integer>>ans=new ArrayList<>();
+       List<Integer>result=new ArrayList<>();
+       boolean [] freq=new boolean[nums.length];
+       permutations(nums,ans,result,freq);
+       return ans;
+        
+    }
+    public void permutations(int[] nums,List<List<Integer>>ans,List<Integer>result,boolean[] freq){
+        if(nums.length==result.size()){
+            ans.add(new ArrayList<>(result));
+            return;
+        }
+        for(int i=0;i<nums.length;i++){
+            if(!freq[i]){
+                freq[i]=true;
+                result.add(nums[i]);
+                permutations(nums,ans,result,freq);
+                result.remove(result.size()-1);
+                freq[i]=false;
+            }
+        }
+    }
+}
